@@ -52,7 +52,7 @@ namespace Auth.Infrastructure.DateBase
                 var password = new PasswordHasher<ApplicationUser>();
                 var hashed = password.HashPassword(user, passwordString);
                 user.PasswordHash = hashed;
-                var userStore = scope.ServiceProvider.GetService<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid>>();
+                var userStore = scope.ServiceProvider.GetService<ApplicationUserStore>();
                 var result = await userStore.CreateAsync(user);
                 if (!result.Succeeded)
                 {

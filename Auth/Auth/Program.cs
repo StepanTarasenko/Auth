@@ -31,6 +31,7 @@ builder.Services
     });
 
 
+builder.Services.AddTransient<ApplicationUserStore>();
 //builder.Services.AddAutoMapper(typeof(Startup));
 
 //builder.Services.AddUnitOfWork<ApplicationDbContext, ApplicationUser, ApplicationRole>();
