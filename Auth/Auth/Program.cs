@@ -1,9 +1,8 @@
-using Auth;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Auth.Infrastructure.DateBase;
-using Microsoft.AspNetCore;
+using Auth.Infrastructure.Openiddict;
+using PricePoint.API.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +30,71 @@ builder.Services
     });
 
 
-builder.Services.AddTransient<ApplicationUserStore>();
+builder.Services.AddTransient<ApplicationUserStore>(); 
+builder.Services.AddUnitOfWork<ApplicationDbContext, ApplicationUser, ApplicationRole>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Настройки пароля
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+
+    // Настройки блокировки
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 10;
+
+    // Настройка двухфакторной аутентификации
+    options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    options.User.RequireUniqueEmail = true;
+});
+
+
+builder.Services.AddOpenIddict()
+    .AddCore(options =>
+    {
+       options.UseEntityFrameworkCore()
+              .UseDbContext<ApplicationDbContext>(); 
+    })
+    .AddServer(options =>
+    {
+        options.SetAuthorizationEndpointUris("/auth/connect/authorize")
+               .SetTokenEndpointUris("/auth/connect/token");
+              //.SetUserinfoEndpointUris("/connect/userinfo")
+              //.SetIntrospectionEndpointUris("/connect/introspect")
+              //.SetLogoutEndpointUris("/connect/logout");
+
+        // Разрешение grant types (authorization code и refresh token)
+       options.AllowAuthorizationCodeFlow()
+              .AllowRefreshTokenFlow()
+              .AllowClientCredentialsFlow();
+
+        // Включение токенов для двухфакторной аутентификации
+       options.RegisterScopes("openid", "profile", "email", "offline_access", "api");
+
+        // Настройка сертификатов
+       options.AddDevelopmentEncryptionCertificate()
+              .AddDevelopmentSigningCertificate();
+
+        options.UseAspNetCore()
+               .EnableTokenEndpointPassthrough()
+              .EnableAuthorizationEndpointPassthrough();
+        //.EnableLogoutEndpointPassthrough()
+        //.EnableUserinfoEndpointPassthrough();
+
+    })
+    .AddValidation(options =>
+    {
+       options.UseLocalServer();
+       options.UseAspNetCore();
+    });
+builder.Services.AddDistributedMemoryCache(options =>
+{
+    // Установите лимит для кэша, например, 100 MB
+    options.SizeLimit = null;
+});
 //builder.Services.AddAutoMapper(typeof(Startup));
 
 //builder.Services.AddUnitOfWork<ApplicationDbContext, ApplicationUser, ApplicationRole>();
@@ -52,8 +115,12 @@ app.UseAuthorization();
 app.MapControllers(); 
 using (var scope = app.Services.CreateScope())
 {
-    DatabaseInitializer.Seed(scope.ServiceProvider);
+    await DatabaseInitializer.Seed(scope.ServiceProvider);
 }
+// Инициализация скоупов OpenIddict
+await OpenIdDictScopeConfig.SeedScopes(app.Services);
 
+// Инициализация клиентов OpenIddict
+await OpenIdDictClientConfig.SeedClients(app.Services);
 
 app.Run();

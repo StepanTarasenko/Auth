@@ -6,7 +6,7 @@ namespace Auth.Infrastructure.DateBase
 {
     public static class DatabaseInitializer
     {
-        public static async void Seed(IServiceProvider serviceProvider)
+        public static async Task Seed(IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
             {

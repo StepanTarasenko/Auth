@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using OpenIddict.EntityFrameworkCore.Models;
 using System.Reflection;
 
 namespace Auth.Infrastructure.DateBase
@@ -13,6 +14,11 @@ namespace Auth.Infrastructure.DateBase
         {
         }
 
+
+        public DbSet<OpenIddictEntityFrameworkCoreApplication> OpenIddictApplications { get; set; }
+        public DbSet<OpenIddictEntityFrameworkCoreAuthorization> OpenIddictAuthorizations { get; set; }
+        public DbSet<OpenIddictEntityFrameworkCoreScope> OpenIddictScopes { get; set; }
+        public DbSet<OpenIddictEntityFrameworkCoreToken> OpenIddictTokens { get; set; }
 
 
         /// <summary>
@@ -243,6 +249,7 @@ namespace Auth.Infrastructure.DateBase
                 }
             }
 
+            builder.UseOpenIddict();
         }
     }
 }
