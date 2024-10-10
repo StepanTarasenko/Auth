@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "Auth.Controllers.AuthorizationEndpoints",
+    "Method": "Exchange",
+    "RelativePath": "auth/connect/token",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "Auth.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

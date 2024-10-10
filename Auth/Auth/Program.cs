@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Auth.Infrastructure.DateBase;
 using Auth.Infrastructure.Openiddict;
 using PricePoint.API.UnitOfWork;
+using Auth.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,6 @@ builder.Services
     .AddDefaultTokenProviders();
 
 builder.Services
-    .AddEntityFrameworkNpgsql()
     .AddDbContextPool<ApplicationDbContext>(config =>
     {
         config
@@ -90,11 +90,7 @@ builder.Services.AddOpenIddict()
        options.UseLocalServer();
        options.UseAspNetCore();
     });
-builder.Services.AddDistributedMemoryCache(options =>
-{
-    // Установите лимит для кэша, например, 100 MB
-    options.SizeLimit = null;
-});
+builder.Services.AddDistributedMemoryCache();
 //builder.Services.AddAutoMapper(typeof(Startup));
 
 //builder.Services.AddUnitOfWork<ApplicationDbContext, ApplicationUser, ApplicationRole>();
@@ -113,6 +109,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers(); 
+app.MapAuthorizationEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     await DatabaseInitializer.Seed(scope.ServiceProvider);

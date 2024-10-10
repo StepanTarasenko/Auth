@@ -1,19 +1,20 @@
 ﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 using System.Security.Claims;
-/*
+using static OpenIddict.Abstractions.OpenIddictConstants;
+
 namespace Auth.Controllers
 {
-    [ApiController]
-    [Route("auth")]
-    public class OpenIddictController : ControllerBase
+    public static class AuthorizationEndpoints
     {
-        [HttpPost("connect/token")]
+        public static WebApplication MapAuthorizationEndpoints(this WebApplication app)
+        {
+            app.MapPost("/auth/connect/token", Exchange);
+            return app;
+        }
+
         public static async Task<IResult> Exchange(HttpContext httpContext, IOpenIddictApplicationManager applicationManager, IOpenIddictScopeManager scopeManager)
         {
             OpenIddictRequest? request = httpContext.GetOpenIddictServerRequest() ??
@@ -89,4 +90,3 @@ namespace Auth.Controllers
         }
     }
 }
-*/
