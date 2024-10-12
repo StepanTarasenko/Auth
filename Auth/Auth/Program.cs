@@ -69,10 +69,11 @@ builder.Services.AddOpenIddict()
         // Разрешение grant types (authorization code и refresh token)
        options.AllowAuthorizationCodeFlow()
               .AllowRefreshTokenFlow()
-              .AllowClientCredentialsFlow();
+              .AllowClientCredentialsFlow()
+              .AllowPasswordFlow();
 
         // Включение токенов для двухфакторной аутентификации
-       options.RegisterScopes("openid", "profile", "email", "offline_access", "api");
+        options.RegisterScopes("openid", "profile", "email", "offline_access", "api");
 
         // Настройка сертификатов
        options.AddDevelopmentEncryptionCertificate()

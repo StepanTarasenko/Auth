@@ -20,7 +20,7 @@ namespace Auth.Controllers
             OpenIddictRequest? request = httpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-            if (request.IsClientCredentialsGrantType())
+            if (request.IsPasswordGrantType())
             {
                 object? application = await applicationManager.FindByClientIdAsync(request.ClientId!)
                     ?? throw new InvalidOperationException("The application details cannot be found in the database.");
