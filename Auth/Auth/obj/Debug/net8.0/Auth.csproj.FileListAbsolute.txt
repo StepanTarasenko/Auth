@@ -157,3 +157,5 @@ D:\projects\Auth\Auth\Auth\bin\Debug\net8.0\Polly.RateLimiting.dll
 D:\projects\Auth\Auth\Auth\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.AutoHistory.dll
 D:\projects\Auth\Auth\Auth\bin\Debug\net8.0\PricePoint.API.UnitOfWork.dll
 D:\projects\Auth\Auth\Auth\bin\Debug\net8.0\PricePoint.API.UnitOfWork.pdb
+D:\projects\Auth\Auth\Auth\bin\Debug\net8.0\Microsoft.Bcl.TimeProvider.dll
+D:\projects\Auth\Auth\Auth\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
